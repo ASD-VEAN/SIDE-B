@@ -1,0 +1,682 @@
+:root{
+    --main: #76CB65;
+    --second:#76cb650e;
+    --third: #000000;
+     --font: "VT323", "Vazirmatn", monospace;
+     --font-size: 500vh;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    background-image: 
+        /* Vignette */
+        radial-gradient(
+            ellipse at center,
+            transparent 0%,
+            rgba(0,0,0,.3) 100%
+        ),
+        /* Scanlines */
+        repeating-linear-gradient(
+            0deg,
+            #ffffff10 0px,
+            #ffffff10 1px,
+            transparent 1px,
+            transparent 3px
+        );
+     animation: enthropy-chaos 11s infinite steps(1);
+     box-shadow: inset 0 0 100px #00000036;  /* Extra vignette */
+}
+
+@keyframes enthropy-chaos {
+    0%, 12%, 15%, 28%, 31%, 45%, 52%, 67%, 69%, 83%, 91%, 100% { 
+        opacity: 1; 
+    }
+    13% { opacity: .85; }  /* Was .6 - now more subtle */
+    14% { opacity: .92; }  /* Was .85 */
+    29% { opacity: .75; }  /* Was .4 - much less intense */
+    30% { opacity: .95; }  /* Same */
+    46% { opacity: .88; }  /* Was .7 */
+    47% { opacity: 1; }
+    48% { opacity: .8; }   /* Was .5 - less dramatic */
+    49% { opacity: .93; }  /* Was .9 */
+    50% { opacity: .7; }   /* Was .3 - much less intense */
+    51% { opacity: 1; }
+    68% { opacity: .87; }  /* Was .75 */
+    84% { opacity: .82; }  /* Was .55 - less intense */
+    85% { opacity: 1; }
+    86% { opacity: .9; }   /* Was .65 */
+    92% { opacity: .78; }  /* Was .45 - less dramatic */
+    93% { opacity: .9; }   /* Was .8 */
+}
+
+#favorite {
+    position: fixed;
+    right: 30px;
+    background-color: var(--third);
+    box-shadow:0 0 15px  var(--third), inset 0 0 10px  var(--third);
+    width: 33px;
+}
+
+#player {
+    transition:
+        transform .35s ease,
+        opacity .35s ease;
+}
+
+.hidden {
+    opacity: 0;
+    transform: translateY(100%);
+    pointer-events: none;
+}
+
+.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+
+
+@font-face{
+    font-family: "Pixel Operator";
+    src: url("fonts/PixelOperator.ttf");
+}
+
+@font-face{
+    font-family: "Perfect DOS VGA 437";
+    src: url("fonts/Perfect\ DOS\ VGA\ 437.ttf");
+}
+
+#lyrics-window{
+    pointer-events:auto;
+    position:absolute;
+    left:100px;
+    top:100px;
+
+    width:400px;
+    height:500px;
+
+    resize:both;
+    overflow:auto;
+
+    background:var(--third);
+    border:2px solid var(--main);
+
+    display:flex;
+    flex-direction:column;
+}
+#lyrics-titlebar{
+    cursor:move;
+    user-select:none;
+
+    padding:6px;
+
+    background:var(--main);
+    color:black;
+
+    display:flex;
+    justify-content:space-between;
+}
+
+#visualizer-window{
+    pointer-events:auto;
+    position:absolute;
+    left:120px;
+    top:120px;
+
+    width:480px;
+    height:320px;
+
+    resize:both;
+    overflow:hidden;
+
+    background:black;
+    border:2px solid var(--main);
+
+    display:flex;
+    flex-direction:column;
+}
+#visualizer-titlebar{
+    cursor:move;
+    user-select:none;
+
+    padding:6px;
+
+    background:var(--main);
+    color:black;
+
+    display:flex;
+    justify-content:space-between;
+    flex-shrink:0;
+}
+#toggleStickman.active{
+    background:var(--third);
+    color:var(--main);
+}
+
+#visualizer-canvas{
+    flex:1;
+    width:100%;
+    height:100%;
+    display:block;
+    image-rendering:pixelated;
+}
+
+.bg{
+    background-color: var(--third);
+}
+
+.themed-scrollbar::-webkit-scrollbar {
+    width: 5px;
+}
+
+.themed-scrollbar::-webkit-scrollbar-thumb {
+    background-color: var(--main) !important;
+    border-radius: 100px;
+}
+
+.themed-scrollbar::-webkit-scrollbar-track {
+    background-color: transparent !important;
+}
+
+.tb-button {
+    background-color:  var(--main);
+    color: var(--third);
+    border: solid var(--third);
+    padding: 5px;
+    flex-shrink: 0;
+}
+
+.settings-btn {
+    padding-left: 15%;
+    padding-bottom: 8px;
+    text-align: start;
+}
+
+.default-btn{
+        background-color:  var(--main);
+    color: var(--third);
+    border: solid var(--third);
+    padding: 5px;
+}
+
+.songbox.active {
+    cursor: pointer;
+    border: 1px dashed  var(--main);
+    box-shadow:0 0 15px  var(--main), inset 0 0 10px  var(--main);
+    background-color: var(--second);
+}
+
+.bg-img {
+    border-radius: 25px;
+    box-shadow: inset 0px 0px 150px 0px  var(--second);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+#songalbum {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+#title {
+    display: inline-block;
+    white-space: nowrap;
+    padding-left: 5px;
+    padding-right: 40px;
+}
+
+.scrolling {
+    animation: spotify-scroll 15s infinite;
+}
+
+@keyframes spotify-scroll {
+    0%, 20% {
+        transform: translateX(0);
+    }
+
+    80%, 100% {
+        transform: translateX(var(--scroll-distance));
+    }
+}
+
+#lyrics-current {
+    text-align: center;
+    color: var(--main);
+    text-shadow: 0 0 8px var(--main);
+    background-color: var(--second);
+    background: linear-gradient(
+    transparent, var(--third));
+    min-height: 2em;
+}
+
+#lyrics-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.lyric-line {
+    display: block;
+    white-space: pre-wrap;
+}
+
+.lyrics-active {
+    opacity: 1;
+    color: var(--main);
+    text-shadow: 0 0 8px var(--main);
+    font-size: larger;
+}
+
+.lyrics-dim {
+
+    opacity: .35;
+
+}
+
+.songbox {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 10px;
+      border: 1px dashed  var(--main);
+  box-shadow: 0px 0px 5px 0px  var(--main);
+  background-color: var(--second);
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: row;
+}
+
+.pixel-border {
+  position: relative;
+  border: 6px dashed  var(--main);
+  box-shadow: 0px 0px 10px 0px  var(--main), inset 0px 0px 25px 0px  var(--main);
+}
+
+
+
+/* Retro slider */
+.slider{
+    appearance:none;
+    -webkit-appearance:none;
+    background:transparent;
+    cursor:pointer;
+}
+
+/* Track */
+.slider::-webkit-slider-runnable-track{
+    height:12px;
+    border:1px solid var(--main);
+    background:
+        linear-gradient(
+            to right,
+            var(--main) 0%,
+            var(--main) var(--progress,35%),
+            var(--second) var(--progress,35%),
+            var(--second) 100%
+        );
+}
+
+.slider::-moz-range-track{
+    height:12px;
+    border:1px solid var(--main);
+    background:var(--second);
+}
+
+/* Thumb */
+.slider::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    appearance:none;
+
+    width:10px;
+    height:22px;
+    margin-top:-6px;
+
+    background:var(--main);
+
+    box-shadow:
+        0 0 8px var(--main),
+        0 0 14px var(--main);
+}
+
+.slider::-moz-range-thumb{
+    width:14px;
+    height:22px;
+    border:none;
+    background:var(--main);
+
+    box-shadow:
+        0 0 8px var(--main),
+        0 0 14px var(--main);
+}
+
+.eq-slider::-webkit-slider-runnable-track {
+  width: 4px;
+  background: var(--main);
+}
+.eq-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100px;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+#player {
+    transition: transform 0.3s ease;
+}
+#mini-player {
+    cursor: grab;
+    touch-action: none;
+}
+#mini-player:active {
+    cursor: grabbing;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg);   }
+    to   { transform: rotate(360deg); }
+}
+.animate-spin {
+    display:                inline-block;
+    animation:              spin 1s linear infinite;
+    transform-origin:       center;
+}
+
+/* ================================================================
+   ENTHROPY & GENESIS
+   These two don't just swap --main/--second/--third — they change
+   border style, radius, shadow behavior, spacing and background
+   texture. setTheme() sets html[data-theme="..."] alongside the
+   color vars, and these blocks key off that attribute.
+
+   ENTHROPY: dark, dissipated. Solaria after the lights have gone
+   out — hairline edges instead of dashed pixel-borders, no neon
+   glow (entropy = energy that has already dispersed), a faint
+   grain, occasional flicker.
+
+   GENESIS: light, overexposed. Solaria at first daylight — wide
+   soft-cornered panels, diffuse ambient shadow instead of glow,
+   generous breathing room, a soft sun-wash in the corner.
+================================================================ */
+
+html[data-theme="ENTHROPY"] body {
+    text-shadow: none;
+    letter-spacing: 1px;
+    font-weight: 300;
+    font-family: 'IBM Plex Mono', 'Vazirmatn', monospace;
+    font-size: 14px;
+}
+
+/* fine static grain, layered on top of the global scanline/vignette effect */
+html[data-theme="ENTHROPY"] body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9998;
+    background-image: radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px);
+    background-size: 3px 3px;
+    mix-blend-mode: overlay;
+}
+
+html[data-theme="ENTHROPY"] .songbox,
+html[data-theme="ENTHROPY"] .pixel-border,
+html[data-theme="ENTHROPY"] .popup,
+html[data-theme="ENTHROPY"] #lyrics-window,
+html[data-theme="ENTHROPY"] #visualizer-window {
+    border-style: solid;
+    border-width: 1px;
+    border-color: color-mix(in srgb, var(--main) 55%, transparent);
+    border-radius: 0;
+    box-shadow: none;
+    /* one corner sheared off — worn, not clean */
+    clip-path: polygon(0 10px, 10px 0, 100% 0, 100% 100%, 0 100%);
+}
+
+html[data-theme="ENTHROPY"] .default-btn,
+html[data-theme="ENTHROPY"] .tb-button {
+    border-style: solid;
+    border-radius: 0;
+    padding: 5px;
+    letter-spacing: 2px;
+    clip-path: polygon(0 6px, 6px 0, 100% 0, 100% 100%, 0 100%);
+}
+
+html[data-theme="ENTHROPY"] .song-title{
+    animation: enthropy-text-glitch 5s steps(1) infinite;
+}
+
+html[data-theme="ENTHROPY"] #title{
+    animation: spotify-scroll 15s infinite;
+}
+
+@keyframes enthropy-text-glitch {
+    0%, 94%, 100% { text-shadow: none; transform: translateX(0); }
+    95%           { text-shadow: 2px 0 #ff4d4d99, -2px 0 #4dd2ff99; transform: translateX(1px); }
+    96%           { text-shadow: none; transform: translateX(-1px); }
+    97%           { text-shadow: -2px 0 #ff4d4d99, 2px 0 #4dd2ff99; transform: translateX(0); }
+}
+
+html[data-theme="ENTHROPY"] .bg-img {
+    border-radius: 0;
+    box-shadow: none;
+    filter: contrast(1.05) saturate(.85);
+}
+
+html[data-theme="ENTHROPY"] .themed-scrollbar::-webkit-scrollbar {
+    width: 2px;
+}
+html[data-theme="ENTHROPY"] .themed-scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 0;
+}
+
+html[data-theme="ENTHROPY"] .slider::-webkit-slider-runnable-track {
+    border-radius: 0;
+}
+html[data-theme="ENTHROPY"] .slider::-webkit-slider-thumb,
+html[data-theme="ENTHROPY"] .slider::-moz-range-thumb {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+html[data-theme="ENTHROPY"] .songbox.active {
+    box-shadow:0 0 10px  var(--main), inset 0 0 5px  var(--main);
+    background-color: var(--second);
+}
+
+html[data-theme="ENTHROPY"] #favorite {
+    padding-bottom: 5px;
+    width: 35px;
+}
+html[data-theme="ENTHROPY"] #play,
+html[data-theme="ENTHROPY"] #back,
+html[data-theme="ENTHROPY"] #next {
+    padding: 10px;
+}
+
+/* ---------------------------------------------------------------- */
+
+html[data-theme="GENESIS"] body {
+    text-shadow: none;
+    letter-spacing: .5px;
+    font-weight: 500;
+    font-family: 'Orbitron', 'Vazirmatn', monospace;
+    font-size: 13px;
+}
+
+html[data-theme="GENESIS"] body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    background: radial-gradient(circle at 80% 8%, rgba(255,255,255,.9), transparent 55%);
+}
+
+html[data-theme="GENESIS"] .songbox,
+html[data-theme="GENESIS"] .pixel-border,
+html[data-theme="GENESIS"] .popup {
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.08);
+}
+
+html[data-theme="GENESIS"] .songbox{
+    padding-left: 10px;
+}
+html[data-theme="GENESIS"] .songbox.active {
+    box-shadow:0 0 10px  var(--main), inset 0 0 5px  var(--main);
+    background-color: var(--second);
+}
+
+html[data-theme="GENESIS"] .popup {
+    border-radius: 10px;
+}
+
+html[data-theme="GENESIS"] #lyrics-window,
+html[data-theme="GENESIS"] #visualizer-window {
+    background-color: var(--third);
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.08);
+}
+html[data-theme="GENESIS"] #lyrics-titlebar,
+html[data-theme="GENESIS"] #visualizer-titlebar {
+    background-color: var(--third);
+    border-style: solid;
+    border-width: 1px;
+}
+
+html[data-theme="GENESIS"] .default-btn,
+html[data-theme="GENESIS"] .tb-button {
+    border-style: solid;
+    border-radius: 999px;
+    padding-left: 10px;
+    padding-right: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+
+html[data-theme="GENESIS"] .bg-img {
+    border-radius: 20px;
+    box-shadow: inset 0 0 60px 0 rgba(0,0,0,.05);
+}
+
+html[data-theme="GENESIS"] .themed-scrollbar::-webkit-scrollbar {
+    width: 8px;
+}
+html[data-theme="GENESIS"] .themed-scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+}
+
+html[data-theme="GENESIS"] .slider::-webkit-slider-runnable-track {
+    border-radius: 999px;
+    border: none;
+}
+html[data-theme="GENESIS"] .slider::-webkit-slider-thumb,
+html[data-theme="GENESIS"] .slider::-moz-range-thumb {
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0,0,0,.2);
+}
+
+html[data-theme="GENESIS"] .lyrics-active {
+    text-shadow: none;
+    font-weight: 700;
+}
+
+html[data-theme="GENESIS"] #favorite {
+    border-radius: 0;
+}
+
+html[data-theme="GENESIS"] #play,
+html[data-theme="GENESIS"] #back,
+html[data-theme="GENESIS"] #next {
+    padding: 20px;
+}
+
+/* ================================================================
+   THEME BOOT SCREEN — plays whenever ENTHROPY/GENESIS is loaded
+   or switched to. Injected/removed by theme-fx.js.
+================================================================ */
+
+#theme-boot-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 2px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity .4s ease;
+}
+#theme-boot-screen.boot-in { opacity: 1; }
+#theme-boot-screen.boot-out { opacity: 0; }
+
+#theme-boot-screen .boot-line {
+    opacity: 0;
+    transform: translateY(6px);
+    animation: boot-line-in .5s ease forwards;
+}
+#theme-boot-screen .boot-line:nth-child(1) { animation-delay: .1s; }
+#theme-boot-screen .boot-line:nth-child(2) { animation-delay: .5s; }
+#theme-boot-screen .boot-line:nth-child(3) { animation-delay: .9s; }
+
+@keyframes boot-line-in {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#theme-boot-screen .boot-bar {
+    width: 220px;
+    height: 3px;
+    background: currentColor;
+    opacity: .2;
+    position: relative;
+    overflow: hidden;
+}
+#theme-boot-screen .boot-bar-fill {
+    position: absolute;
+    inset: 0;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: boot-fill 1.4s ease forwards;
+}
+@keyframes boot-fill {
+    to { transform: scaleX(1); }
+}
+
+/* Enthropy's boot glitches instead of just fading in cleanly */
+#theme-boot-screen[data-boot="ENTHROPY"] .boot-line {
+    animation: boot-line-in .5s ease forwards, boot-glitch 2.4s steps(1) infinite;
+}
+@keyframes boot-glitch {
+    0%, 89%, 100% { opacity: 1; text-shadow: none; }
+    90%           { opacity: .5; text-shadow: 2px 0 #ff4d4d, -2px 0 #4dd2ff; }
+    91%           { opacity: 1; text-shadow: none; }
+    95%           { opacity: .7; }
+    96%           { opacity: 1; }
+}
+
+
+#theme-mesh {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .6s ease;
+}
+#theme-mesh.active {
+    opacity: .9;
+}

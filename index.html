@@ -1,0 +1,561 @@
+<!-- start: node_modules\electron\dist\electron.exe . -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>SIDE B</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=Orbitron:wght@400;700&family=Oxanium:wght@400;700&family=Press+Start+2P&family=Silkscreen:wght@400;700&family=Wallpoet&display=swap&family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <title>music player</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+      crossorigin="anonymous"/>
+</head>
+
+<style>
+    body{
+font-family: var(--font);
+font-size: var(--font-size);
+letter-spacing: 1px;
+color: var(--main);
+text-shadow: 0 0 6px var(--main);
+    }
+</style>
+
+<body class="bg w-[100vw] h-[100vh] overflow-hidden md:p-[10px]">
+
+    <div id="more-popup" class="hidden fixed inset-0 z-50 flex justify-center-safe items-center bg-[#00000070] overflow-y-auto p-[20px] scrollbar-none">
+    <div class="popup bg border-[2px] border-dashed border-main outline-double outline-offset-4 outline-main p-[10px] w-full md:w-[60vw] max-h-[90vh] overflow-y-auto scrollbar-none">
+
+        <div class="flex flex-row justify-between">
+        <h3>C:\PLAYER\MORE.EXE</h3>
+        <button id="close-more" class="self-center">[X]</button>
+        </div>
+        
+        <span class="border-b-2">PLAYBACK</span>
+        <div class="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-2 items-start">
+        <button id="eq" class="default-btn">🎚 EQUALIZER</button>
+        <button id="vis" class="default-btn">၊၊||၊ VISUALIZER</button>
+        <div id="speed" class="default-btn flex flex-row justify-between">
+            ⏱ SPEED
+            <select id="speed-select">
+    <option value="0.5">0.5x</option>
+    <option value="0.75">0.75x</option>
+    <option value="1" selected>1x (Normal)</option>
+    <option value="1.25">1.25x</option>
+    <option value="1.5">1.5x</option>
+    <option value="2">2x</option>
+</select>
+        </div>
+    <button id="sleep-timer" class="default-btn flex flex-col items-start w-full">
+    <span id="sleep-label" class="self-center">⋆☽ SLEEP TIMER [OFF]</span>
+    <div id="sleep-options" class="hidden w-full flex flex-col gap-2 mt-2">
+        <label class="sleep-option">
+            <input type="radio" name="sleep" value="end">
+            End of current song
+        </label>
+        <label class="sleep-option">
+            <input type="radio" name="sleep" value="15">
+            15 minutes
+        </label>
+        <label class="sleep-option">
+            <input type="radio" name="sleep" value="30" checked>
+            30 minutes
+        </label>
+        <label class="sleep-option">
+            <input type="radio" name="sleep" value="60">
+            1 hour
+        </label>
+        <label class="sleep-option">
+            <input type="radio" name="sleep" value="custom">
+            Custom
+        </label>
+        <input id="sleep-minutes" type="number" min="1" value="30" class="w-full hidden">
+        <span id="sleep-status" class="text-sm">OFF</span>
+    </div>
+        </button>
+        </div>
+        <span class="border-b-2">METADATA</span>
+        <div class="grid auto-rows-fr grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-2">
+            <button id="edit-info" class="default-btn">✎ EDIT INFORMATION</button>
+        <button id="refresh-mbz" class="default-btn">⟳ REFRESH METADATA</button>
+        <button id="disable-mbz" class="default-btn">X DISABLE METADATA</button>
+        <button id="edit-lyrics" class="default-btn">♪ LYRICS</button>
+        </div>
+        <span class="border-b-2">DISCOVER</span>
+        <div class="grid auto-rows-fr grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-2 pb-[20px]">
+        <button id="recs" class="default-btn">★ SIMILAR</button>
+        <button id="tabs" class="default-btn">𝄞𝄢 TABS & CHORDS</button>
+        <button id="album-explorer" class="default-btn">🕪 ALBUM EXPLORER</button>
+        <button id="external-links" class="default-btn">🌏︎ LINKS & BIO</button>
+        </div>
+
+        <div id="more-info" class="border-2 border-dashed border-main p-[10px]">
+    <div>Artist: -</div>
+    <div>Album: -</div>
+    <div>Year: -</div>
+    <div class="pb-[10px] flex flex-wrap gap-2">
+        <span id="status-cover">□ Cover</span>
+        <span id="status-mb">□ Metadata</span>
+        <span id="status-lyrics">□ Lyrics</span>
+    </div>
+    <button id="delete" class="text-center outline-2 p-[5px] w-full">🗑 DELETE</button>
+</div>
+    </div>
+</div>
+
+<div id="custom-prompt-popup" class="fixed inset-0 z-50 flex items-center justify-center hidden p-[20px] bg-[#00000070]">
+    <div class="popup p-[20px] bg border-2 border-dashed border-main lg:w-[40vw] w-full flex flex-col gap-2">
+        <div class="flex justify-between items-center border-b pb-2">
+            <h4 id="prompt-popup-title">INPUT</h4>
+            <button id="prompt-popup-close">[X]</button>
+        </div>
+
+        <p id="prompt-popup-msg" class="opacity-80 whitespace-pre-line hidden"></p>
+        <div id="prompt-popup-inputs" class="flex flex-col gap-3"></div>
+
+        <div class="flex justify-end gap-2 pt-2">
+            <button id="prompt-popup-cancel" class="default-btn">CANCEL</button>
+            <button id="prompt-popup-confirm" class="default-btn">CONFIRM</button>
+        </div>
+    </div>
+</div>
+
+<div id="similar-popup" class="fixed inset-0 z-50 flex items-center justify-center hidden p-[20px] bg-[#00000070]">
+    <div class="popup p-4 bg border-2 border-dashed border-main lg:w-[50vw] w-full flex flex-col gap-4 max-h-[85vh] themed-scrollbar">
+
+        <div class="flex flex-row justify-between items-center border-b-2">
+            <div>
+                <h4 class="font-bold">SIMILAR TRACKS</h4>
+                <div id="similar-subtitle" class="opacity-70 truncate"></div>
+            </div>
+            <button id="similar-close">[X]</button>
+        </div>
+        <div id="similars-list" class="flex flex-col gap-2 overflow-y-auto p-[10px] themed-scrollbar"></div>
+
+    </div>
+</div>
+
+<div id="queue-popup" class="fixed inset-0 z-50 flex items-center justify-center hidden p-[20px] bg-[#00000070]">
+    <div class="popup p-4 bg border-2 border-dashed border-main lg:w-[50vw] w-full flex flex-col max-h-[85vh] themed-scrollbar">
+
+        <div class="flex flex-row justify-between items-center border-b-2">
+            <div>
+                <h4 class="font-bold">UPCOMING PLAYBACK QUEUE</h4>
+                <div id="queue-subtitle" class="opacity-70 truncate"></div>
+            </div>
+            <button id="queue-close">[X]</button>
+        </div>
+        <div id="queue-list" class="flex flex-col gap-2 overflow-y-auto p-[10px] themed-scrollbar"></div>
+
+    </div>
+</div>
+
+<div id="mbz-picker-popup" class="absolute z-51 size-full flex bg-[#00000070] hidden overflow-none flex justify-center-safe p-[20px] mr-[10px]">
+    <div class="popup p-[20px] bg border-2 border-dashed w-full flex flex-col">
+
+        <div class="flex justify-between items-center border-b-2 pb-[10px]">
+            <h4 class="">SELECT MUSICBRAINZ MATCH</h4>
+            <button id="mbz-picker-close">[X]</button>
+        </div>
+
+        <div class="flex gap-2 p-[10px]">
+            <input id="mbz-search-input" type="text" placeholder="Artist or song title..." class="flex-1 border-1 px-[10px]">
+            <button id="mbz-search-btn" class="default-btn">SEARCH MUSICBRAINZ</button>
+        </div>
+
+        <div id="mbz-candidates-list" class="flex flex-col gap-2 overflow-y-auto themed-scrollbar p-[10px] pr-1"></div>
+    </div>
+</div>
+
+<div id="edit-popup" class="fixed inset-0 z-50 flex items-center justify-center hidden p-[20px] bg-[#00000070]">
+    <div class="popup p-4 bg border-2 border-dashed border-main lg:w-[50vw] w-full flex flex-col gap-4">
+
+        <div class="flex flex-row justify-between items-center border-b border-main/20 pb-2">
+            <h4 class="font-bold tracking-wider text-main">EDIT INFORMATION</h4>
+            <button id="edit-close" class="hover:text-main font-mono transition-colors">[X]</button>
+        </div>
+
+        <div id="edit-form-container" class="flex flex-col gap-3 overflow-y-auto">
+        
+            <div class="flex items-center gap-3 py-2">
+    <input type="file" id="edit-cover-input" accept="image/*" class="hidden">
+                <img id="edit-cover-preview" class="w-24 h-24 object-cover border-1 rounded" src="" alt="Cover Preview">
+                <div class="flex flex-col overflow-hidden">
+                    <span class="font-bold">IMG PATH:</span>
+                    <span id="edit-path" class="truncate"></span>
+                </div>
+            </div>
+
+            <label class="flex flex-col">
+                <span>TITLE:</span>
+                <input id="edit-title" type="text" class="border-b-2 w-full">
+            </label>
+
+            <label class="flex flex-col">
+                <span>ARTIST:</span>
+                <input id="edit-artist" type="text" class="border-b-2 w-full">
+            </label>
+
+            <label class="flex flex-col">
+                <span>ALBUM:</span>
+                <input id="edit-album" type="text" class="border-b-2 w-full">
+            </label>
+
+            <label class="flex flex-col">
+                <span>YEAR:</span>
+                <input id="edit-year" type="number" class="border-b-2 w-full">
+            </label>
+
+            <label class="flex flex-col">
+                <span>GENRE:</span>
+                <input id="edit-genre" type="text" class="border-b-2 w-full">
+            </label>
+
+        </div>
+
+        <div class="flex justify-end gap-2 pt-[10px]">
+            <button id="edit-save" class="default-btn w-full">
+                SAVE CHANGES
+            </button>
+        </div>
+
+    </div>
+</div>
+
+    <div id="visualizer-popup" class="fixed inset-0 z-5 hidden pointer-events-none overflow-hidden">
+    <div id="visualizer-window" class="window flex flex-col overflow-hidden">
+        
+        <div id="visualizer-titlebar" class="shrink-0">
+            C:\VISUALIZER>
+            <div class="flex gap-2">
+                <button id="toggleStickman">☺ DANCE</button>
+                <button id="closeVisualizer">[X]</button>
+            </div>
+        </div>
+
+        <div id="canvas-container" class="relative w-full flex-1 overflow-hidden">
+            <canvas id="visualizer-canvas" class="block w-full h-full"></canvas>
+        </div>
+
+    </div>
+</div>
+
+    <div id="eq-popup" class="absolute z-51 size-full flex bg-[#00000070] hidden overflow-none flex justify-center-safe p-[20px]">
+    <div class="popup bg border-[2px] border-dashed border-main outline-double outline-offset-4 outline-main p-[10px] w-full md:w-[60vw] h-fit overflow-y-auto scrollbar-none flex flex-col self-center">
+    
+         <div class="flex flex-row justify-between">
+        <h4>C:\EQUALIZER></h4>
+        <button id="close-eq">[X]</button>
+        </div>
+        
+        <div id="eq-container" class="relative p-[10px]">
+  <canvas id="eq-canvas" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+  <div id="eq-sliders" class="relative flex justify-around items-center h-full w-full"></div>
+  </div>
+      <div class="flex items-center gap-2">
+        <input id="new-preset-name" type="text" placeholder="Preset Name..." class="border-b-2 px-1 py-0.5 flex-grow">
+        <button id="save-preset-btn" class="border-2 px-2 py-1 transition-colors">SAVE</button>
+    </div>
+    
+      <div class="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-2 items-start">
+    <button id="eq-reset" class="default-btn">RESET</button>
+    <button id="eq-jazz" class="default-btn">JAZZ</button>
+    <button id="eq-class" class="default-btn">CLASSICAL</button>
+    <button id="eq-hiphop" class="default-btn">HIPHOP</button>
+    <button id="eq-rock" class="default-btn">ROCK</button>
+    <button id="eq-metal" class="default-btn">METAL</button>
+    <button id="eq-dreamy" class="default-btn">DREAMY</button>
+    <button id="eq-muted" class="default-btn">MUTED</button>
+    <button id="eq-loud" class="default-btn">LOUD</button>
+    <button id="eq-amRadio" class="default-btn">AM RADIO</button>
+    <button id="eq-sludgeFuzz" class="default-btn">SLUDGE FUZZ</button>
+    <button id="eq-vSmiley" class="default-btn">V SMILEY</button>
+    </div>
+    <div class="flex flex-col">
+        <span>CUSTOM PRESET:</span>
+        <div id="eq-preset-select" class="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-2 items-start">
+        </div>
+    </div>
+
+        </div>
+    </div>
+
+    <div id="lyrics-popup" class="fixed inset-0 z-5 hidden pointer-events-none overflow-none">
+        <div id="lyrics-window" class="window">
+    <div id="lyrics-titlebar">
+        C:\LYRICS>
+        <button id="closeLyrics">[X]</button>
+    </div>
+
+    <div id="lyrics-container" class="p-[20px] overflow-auto themed-scrollbar"></div>
+
+    <div id="lyrics-counter" class="border-t-2 p-[10px]"></div>
+</div>
+    </div>
+    <div id="editlyrics-popup" class="fixed inset-0 z-50 flex items-center justify-center hidden p-[20px] bg-[#00000070]">
+    <div class="popup p-4 bg border-2 border-dashed border-main lg:w-[50vw] w-full flex flex-col gap-4">
+
+        <div class="flex flex-row justify-between items-center border-b">
+            <h4>EDIT LYRICS</h4>
+            <button id="editlyrics-close" class="hover:text-main font-mono transition-colors">[X]</button>
+        </div>
+
+        <div class="flex gap-2">
+            <input id="lrclib-search-input" type="text" placeholder="Song title or artist..." class="border-1 w-full px-[5px]">
+            <button id="lrclib-search-btn" class="default-btn text-nowrap">SEARCH LRCLIB</button>
+        </div>
+
+        <div id="lrclib-results-list" class="hidden flex-col gap-2 overflow-y-auto max-h-[200px] border-1 p-[10px] themed-scrollbar"></div>
+
+<div class="flex flex-col gap-1 flex-1 min-h-[250px]">
+    <label class="opacity-70">Lyrics Content (LRC synced timestamps or Plaintext):</label>
+    <textarea id="lyrics-editor-text" class="w-full h-full flex-1 border-1 resize-none overflow-y-auto p-[10px] themed-scrollbar"></textarea>
+</div>
+        <div class="flex justify-end gap-2 pt-[10px]">
+            <button id="lyrics-save" class="default-btn w-full">
+                SAVE CHANGES
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<div id="wallpaper-popup" class="absolute z-10 size-full flex bg-[#00000070] hidden overflow-none flex justify-center-safe p-[20px]">
+
+    <div class="popup p-[10px] bg flex flex-col self-center border-[2px] border-dashed border-main size-fit">
+
+        <div class="flex flex-row justify-between">
+        <span>SELECT WALLPAPER:</span>
+        <button id="close-wallpaper">[X]</button>
+        </div>
+        
+        <div class="flex flex-row gap-2 flex-wrap">
+        <button data-wallpaper="wallpaper1.png" class="default-btn">DEFAULT</button>
+        <button data-wallpaper="green-stars.jpg" class="default-btn">STARS</button>
+        <button data-wallpaper="green-cross.jpg" class="default-btn">CROSS</button>
+        <button id="no-wallpaper" class="default-btn">NONE</button>
+        <button id="custom-wallpaper" class="default-btn">FROM FILE...</button>
+        </div>
+
+    </div>
+
+</div>
+
+<div id="theme-popup" class="absolute z-10 size-full flex bg-[#00000070] hidden overflow-none flex justify-center-safe p-[20px]">
+
+    <div class="popup p-[10px] bg flex flex-col self-center border-[2px] border-dashed border-main size-fit">
+
+        <div class="flex flex-row justify-between">
+        <span>SELECT THEME:</span>
+        <button id="close-theme">[X]</button>
+        </div>
+        
+        <div class="flex flex-row gap-2 flex-wrap">
+        <button data-theme="MATRIX" class="default-btn theme-btn">MATRIX</button>
+        <button data-theme="GAMEBOY" class="default-btn theme-btn">GAMEBOY</button>
+        <button data-theme="CYBERPUNK" class="default-btn theme-btn">CYBERPUNK</button>
+        <button data-theme="ERR0R" class="default-btn theme-btn">ERR0R</button>
+        <button data-theme="WARNING" class="default-btn theme-btn">WARNING</button>
+        <button data-theme="POWERSHELL" class="default-btn theme-btn">POWERSHELL</button>
+        <button data-theme="NOIR" class="default-btn theme-btn">NOIR</button>
+        <button data-theme="ENTHROPY" class="default-btn theme-btn">ENTHROPY</button>
+        <button data-theme="GENESIS" class="default-btn theme-btn">GENESIS</button>
+        </div>
+
+    </div>
+
+</div>
+
+<div id="font-popup" class="absolute z-10 size-full flex bg-[#00000070] hidden overflow-none flex justify-center-safe p-[20px]">
+
+    <div class="popup p-[10px] bg flex flex-col self-center border-[2px] border-dashed border-main size-fit">
+
+        <div class="flex flex-row justify-between">
+        <span>SELECT FONT:</span>
+        <button id="close-font">[X]</button>
+        </div>
+        
+        <div class="flex flex-row gap-2 flex-wrap">
+            <button data-font="VT323" class="default-btn font-btn">VT323</button>
+        <button data-font="PERFECTDOSVGA437" class="default-btn font-btn">PERFECT DOS VGA 437</button>
+        <button data-font="PIXELOPERATOR" class="default-btn font-btn">PIXEL OPERATOR</button>
+        <button data-font="IBMPLEXMONO" class="default-btn font-btn">IBM PLEX MONO</button>
+        <button data-font="OXANIUM" class="default-btn font-btn">OXANIUM</button>
+        <button data-font="ORBITRON" class="default-btn font-btn">ORBITRON</button>
+        <button data-font="SILKSCREEN" class="default-btn font-btn">SILKSCREEN</button>
+        <button data-font="WALLPOET" class="default-btn font-btn">WALLPOET</button>
+        </div>
+
+    </div>
+
+</div>
+
+    <div id="settings-popup" class="absolute z-5 size-full flex bg-[#00000070] hidden overflow-none flex justify-center-safe p-[20px]">
+       <div class="py-[10px] px-[15px] bg flex flex-col self-center border-[2px] border-dashed border-main outline-double outline-offset-4 outline-main h-fit lg:w-[50vw] w-[90vw]">
+
+        <div id="header" class="flex flex-row justify-between">
+            <pre class="overflow-hidden">
+Microsoft MusicPlayer 1.0
+------------------------------
+
+C:\PLAYER>
+settings.exe
+            </pre>
+        <button id="xsettingpopup" class="font-bold self-start">[X]</button>
+    </div>
+<div class="flex flex-row pb-[10px]">
+
+    <div class="flex flex-col flex-1/5">
+        <span class="pb-[10px]">[DIR] CHOOSE A SOURCE</span>
+                <span id="file-src" class="settings-btn">├── No folder selected</span>
+                <button id="file-select" class="settings-btn">└──SELECT FOLDER</button>
+                <button id="clear-cache" class="settings-btn font-bold text-red-900">└──CLEAR CACHE</button>
+        <span class="py-[10px]">[CFG] CHANGE YOUR LOOK</span>
+                <button id="wallpaper-btn" class="settings-btn">├──WALLPAPER</button>
+                <button id="theme-btn" class="settings-btn">├──THEME</button>
+                <button id="font-btn" class="settings-btn">└──FONT</button>
+        <span class="py-[10px]">[TXT] EXTRACT AS TEXT</span>
+                <button id="songsext" class="settings-btn">├──SONGS</button>
+                <button id="albumsext" class="settings-btn">├──ALBUMS</button>
+                <button id="artistsext" class="settings-btn">├──ARTISTS</button>
+                <button id="favext" class="settings-btn">└──FAVORITES</button>
+    </div>   
+        
+    <div class="flex flex-col flex-1">
+        <span class="pb-[10px]">INFORMATION</span>
+        <div class="flex flex-row justify-between pb-[10px]">
+            <div class="flex flex-col">
+        <span>Songs:</span>
+        <span>Albums:</span>
+        <span>Artists:</span>
+        <span>Duration:</span>
+            </div>
+            <div class="flex flex-col">
+                <span id="info-songs">0</span>
+<span id="info-albums">0</span>
+<span id="info-artists">0</span>
+<span id="info-duration">00:00:00</span>
+            </div>
+        </div>
+        <span class="py-[10px]">WALLPAPER</span>
+        <span id="current-wallpaper" class="pb-[10px]">wallpaper1.png</span>
+        <span class="py-[10px]">THEME</span>
+        <span id="current-theme" class="pb-[10px]">MATRIX</span>
+        <span class="py-[10px]">FONT</span>
+        <span id="current-font">VT323</span>
+    </div>
+
+</div>
+
+      <div class="flex flex-row justify-between border-t-1">
+        <span>VERSION 1.0</span>
+        <span>MADE BY [ VEAN ]</span>
+      </div>
+
+       </div>
+    </div>
+
+
+    <div class="flex flex-row-reverse size-full">
+<div id="player" class="pixel-border overflow-y-auto scrollbar-none h-full lg:w-[30%] shrink-0 p-[10px] pb-[20px] lg:flex flex-col justify-evenly lg:justify-between hidden">
+
+    <div>
+    <div class="h-fit w-full flex flex-col-reverse justify-start p-[20px] relative">
+<div id="lyrics-current" class="lyrics-active pt-[10px] absolute z-2 w-[95%] self-center"></div>
+<div id="cover" class="aspect-square relative"></div>
+<button id="video-toggle" class="absolute top-2 right-2 z-3 tb-button text-xs">▶ VIDEO</button>
+</div>
+
+    <div id="songalbum" class="w-full shrink-0 pb-[20px] text-2xl flex flex-row">
+        <span id="title">> C:\ARTIST\ALBUM\SONG.MP3</span>
+        <img id="favorite" src="imgs/MATRIX//star-nf.png" alt="favorite" class="favorite rounded-full">
+    </div>
+    <div id="prog-bar" class="w-full px-2 flex items-center gap-2 text-[clamp(0.8rem,2vw,1.25rem)]">
+  <span id="progress-value" class="shrink-0">00:00</span>
+  <input id="progress" type="range" min="0" max="100" value="35" class="slider flex-1 min-w-0"/>
+  <span id="overall-value" class="shrink-0">00:00</span>
+    </div>
+    <div id="buttons" class="w-full h-fit flex flex-row flex-grow justify-evenly py-[20px]">
+        <button id="shuffle" class="w-[80px] p-[10px]"><img data-icon="shuffle" src="imgs/MATRIX/shuffle.png" alt="shuffle" class="object-cover"></button>
+        <button id="back" class="w-[120px] aspect-square"> <img data-icon="back" src="imgs/MATRIX/back.png" alt="back" class="w-full"> </button>
+            <button id="play" class="w-[120px] aspect-square"> <img data-icon="play" src="imgs/MATRIX/play.png" alt="Play" class="w-full"> </button>
+                <button id="next" class="w-[120px] aspect-square"> <img data-icon="next" src="imgs/MATRIX/next.png" alt="next" class="w-full"> </button>
+                <button id="loop" class="w-[80px] p-[10px]"><img data-icon="loop" src="imgs/MATRIX/loop.png" alt="loop" class="object-cover"></button>
+    </div>
+   </div>
+
+    <div class="flex flex-col gap-2">
+       <button id="more" class="tracking-[0.5em] font-bold">&lt;&lt;MORE&gt;&gt;</button>
+       <button id="view-queue-btn" class="tracking-[0.5em] font-bold">⇶ QUEUE (0)</button>
+       <button id="addtoplaylist" class="tracking-[0.5em] font-bold ">&lt;&lt;✚ PLAYLIST&gt;&gt;</button>
+    </div>
+
+</div>
+
+ <div class="flex flex-col size-full">
+        <div id="home" class="flex flex-col size-full px-[10px] py-[10px] lg:mr-[15px] bg-img">
+    <div class="flex items-center gap-1.5 w-full">
+      <input type="text" id="search" placeholder="SEARCH OR PASTE SPOTIFY LINK..." class="text-main border-2 border-main py-[5px] px-[15px] rounded-full flex-1"></input>
+      <button id="search-mode-toggle" class="select-none">[LOCAL]</button>
+    </div>
+      <div id="topbar" class="flex flex-row rounded-[1px] py-[20px] text-black gap-2 overflow-x-auto overflow-y-hidden scrollbar-none shrink-0">
+        <button id="settings-btn" class="tb-button">SETTINGS</button>
+        <button id="songs-btn" class="tb-button">SONGS</button>
+        <button id="artists-btn" class="tb-button">ARTISTS</button>
+        <button id="albums-btn" class="tb-button">ALBUMS</button>
+        <button id="favs-btn" class="tb-button">FAVORITES</button>
+        <button id="playlists-btn" class="tb-button">PLAYLISTS</button>
+      </div>
+
+      <div id="library" class="themed-scrollbar flex flex-col gap-2 pr-[10px] size-full overflow-y-auto overflow-x-hidden bg-[#00000000]">
+        <div id="songbox" class="songbox">
+      </div>
+
+    </div>
+    
+        <div id="mini-player" class="flex items-center gap-3 pixel-border p-[10px] h-24 lg:hidden"> 
+            <button id="toggle-player">▴</button>
+    <img id="mini-cover" src="" class="aspect-square h-16 object-cover">
+
+    <div class="flex flex-col flex-1 overflow-hidden">
+        <span id="mini-title"></span>
+        <span id="mini-artist"></span>
+    </div>
+
+    <button id="mini-back" class=" h-16 aspect-square max-sm:hidden"> <img data-icon="back" src="imgs//MATRIX/back.png" alt="back"> </button>
+            <button id="mini-play" class=" h-16 aspect-square"> <img data-icon="play" src="imgs/MATRIX/play.png" alt="Play"> </button>
+                <button id="mini-next" class=" h-16 aspect-square max-sm:hidden"> <img data-icon="next" src="imgs/MATRIX/next.png" alt="next"> </button>
+        </div>
+      </div>    
+ </div>
+
+</div>
+
+</body>
+
+<script src="dom.js"></script>
+
+<script src="capacitor-bridge.js"></script>
+
+<script src="settings.js"></script>
+
+<script src="theme-fx.js"></script>
+
+<script src="more.js"></script>
+
+<script src="player.js"></script>
+
+<script src="library.js"></script>
+
+<script src="views.js"></script>
+
+<script src="script.js"></script>
+</html>

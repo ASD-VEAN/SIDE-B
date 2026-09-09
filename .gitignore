@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Personal/runtime data - the app generates these fresh in userData at
+# runtime; local root-level copies are just dev leftovers and contain
+# real folder paths / playlist contents
+settings.json
+cache/
+musicbrainz.json
+playlists.json
+lyrics.json
+
+# Downloaded/bundled binaries (large, platform-specific, not source)
+yt-dlp.exe
+ffmpeg.exe
+ffprobe.exe
+yt-dlp-plugin*/
+
+# OS/editor cruft
+.DS_Store
+Thumbs.db
+.vscode/

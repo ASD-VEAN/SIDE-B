@@ -1,0 +1,67 @@
+{
+  "name": "side-b",
+  "version": "1.0.0",
+  "description": "CMD music player",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:win": "electron-builder --win"
+  },
+  "devDependencies": {
+    "electron": "^43.4.1",
+    "electron-builder": "^26.15.3"
+  },
+  "dependencies": {
+    "axios": "^1.19.0",
+    "electron-serve": "^3.0.1",
+    "electron-updater": "^6.3.9",
+    "fast-levenshtein": "^3.0.0",
+    "music-metadata": "^11.13.0",
+    "musicbrainz-api": "^1.2.1",
+    "node-id3": "^0.2.9",
+    "yt-dlp-exec": "^1.0.2"
+  },
+  "build": {
+    "appId": "com.sideb.app",
+    "productName": "SIDE B",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!cache/**",
+      "!dist/**",
+      "!settings.json",
+      "!yt-dlp.exe",
+      "!ffmpeg.exe",
+      "!ffprobe.exe",
+      "!yt-dlp-plugins/**"
+    ],
+    "extraResources": [
+      {
+        "from": "yt-dlp.exe",
+        "to": "yt-dlp.exe"
+      },
+      {
+        "from": "ffmpeg.exe",
+        "to": "ffmpeg.exe"
+      },
+      {
+        "from": "ffprobe.exe",
+        "to": "ffprobe.exe"
+      }
+    ],
+    "win": {
+      "target": [
+        "portable"
+      ],
+      "icon": "imgs/icon.ico"
+    },
+    "publish": {
+      "//": "ASD-VEAN/SIDE-B",
+      "provider": "github",
+      "owner": "ASD-VEAN",
+      "repo": "SIDE-B"
+    }
+  }
+}
