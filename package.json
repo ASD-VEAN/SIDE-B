@@ -59,7 +59,6 @@
     },
     "publish": [
   {
-    "//": "ASD-VEAN/SIDE-B",
       "provider": "github",
       "owner": "ASD-VEAN",
       "repo": "SIDE-B"
