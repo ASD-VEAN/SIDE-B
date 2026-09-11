@@ -61,6 +61,4 @@ just an overall warning, metadata fetching can be inaccurate, especially with ba
 
 ## License
 
-## License
-
 Public domain — Do whatever you want with it. I would love to see improvements i couldn't make myself. If you think your version is genuinly better... well, go ahead. It's yours now. i renounce my rights to the crown. 
