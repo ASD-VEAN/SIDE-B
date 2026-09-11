@@ -57,11 +57,12 @@
       ],
       "icon": "imgs/icon.ico"
     },
-    "publish": {
-      "//": "ASD-VEAN/SIDE-B",
-      "provider": "github",
-      "owner": "ASD-VEAN",
-      "repo": "SIDE-B"
-    }
+    "publish": [
+  {
+    "provider": "github",
+    "owner": "your-username",
+    "repo": "your-repo"
+  }
+]
   }
 }
