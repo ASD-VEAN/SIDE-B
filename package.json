@@ -1,6 +1,7 @@
 {
   "name": "side-b",
   "version": "1.0.0",
+  "author": "ASD-VEAN",
   "description": "CMD music player",
   "main": "main.js",
   "scripts": {
@@ -8,7 +9,7 @@
     "build:win": "electron-builder --win"
   },
   "devDependencies": {
-    "electron": "^34.2.0",
+    "electron": "34.2.0",
     "electron-builder": "^26.15.3"
   },
   "dependencies": {
@@ -24,6 +25,10 @@
   "build": {
     "appId": "com.sideb.app",
     "productName": "SIDE B",
+    "electronVersion": "34.2.0",
+    "electronDownload": {
+      "mirror": "https://npmmirror.com/mirrors/electron/"
+    },
     "directories": {
       "output": "dist"
     },
@@ -58,11 +63,11 @@
       "icon": "imgs/icon.ico"
     },
     "publish": [
-  {
-      "provider": "github",
-      "owner": "ASD-VEAN",
-      "repo": "SIDE-B"
-  }
-]
+      {
+        "provider": "github",
+        "owner": "ASD-VEAN",
+        "repo": "SIDE-B"
+      }
+    ]
   }
 }
